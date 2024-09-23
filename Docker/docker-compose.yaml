@@ -1,0 +1,104 @@
+version: '3.3'
+
+services:
+  world-database:
+    image: postgres:16-alpine
+    container_name: world-database
+    ports:
+      - "5441:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "world"
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ./initCountryAndCity.sql:/docker-entrypoint-initdb.d/1-init.sql
+      - ./dataCountryAndCity.sql:/docker-entrypoint-initdb.d/2-data.sql
+      - /D/PostgreSQL/16/world/data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      backend:
+        aliases:
+          - "world-database-master"
+
+  countrylanguage-database:
+    image: postgres:16-alpine
+    container_name: countrylanguage-database
+    ports:
+      - "5442:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "languages"
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ./initCountryLanguage.sql:/docker-entrypoint-initdb.d/1-init.sql
+      - ./dataCountryLanguage.sql:/docker-entrypoint-initdb.d/2-data.sql
+      - /D/PostgreSQL/16/countrylanguage/data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      backend:
+        aliases:
+          - "countrylanguage-database-master"
+
+  config-server:
+    image: localhost:5000/spring-cloud-config-server:0.0.1-SNAPSHOT
+    ports:
+      - "8888:8888"
+    networks:
+      backend:
+        aliases:
+          - "config-server"
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.001'
+#          memory: 100M
+#        reservations:
+#          cpus: '0.0001'
+#          memory: 50M
+
+  naming-server:
+    image: localhost:5000/spring-cloud-naming-server:1.0-SNAPSHOT
+    environment:
+      - "SPRING_PROFILES_ACTIVE=cloud"
+    ports:
+      - "8761:8761"
+    depends_on:
+      config-server:
+        condition: service_started
+    networks:
+      backend:
+        aliases:
+          - "naming-serve"
+
+  gateway-server:
+    image: localhost:5000/spring-cloud-gateway-server:1.0-SNAPSHOT
+    environment:
+      - "SPRING_PROFILES_ACTIVE=cloud"
+    ports:
+      - "8765:8765"
+    depends_on:
+      config-server:
+        condition: service_started
+      naming-server:
+        condition: service_started
+    networks:
+      backend:
+        aliases:
+          - "gateway-server"
+
+
+
+
+networks:
+  backend:
+    driver: bridge
