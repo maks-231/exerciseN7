@@ -23,7 +23,7 @@ services:
     networks:
       backend:
         aliases:
-          - "world-database-master"
+          - "country-database-master"
 
   countrylanguage-database:
     image: postgres:16-alpine
@@ -47,7 +47,7 @@ services:
     networks:
       backend:
         aliases:
-          - "countrylanguage-database-master"
+          - "country-language-database-master"
 
   config-server:
     image: localhost:5000/spring-cloud-config-server:0.0.1-SNAPSHOT

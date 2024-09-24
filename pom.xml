@@ -11,6 +11,8 @@
     <module>spring-cloud-config-server</module>
     <module>spring-cloud-naming-server</module>
     <module>spring-cloud-gateway-server</module>
+    <module>language-service</module>
+    <module>country-service</module>
   </modules>
 
   <properties>

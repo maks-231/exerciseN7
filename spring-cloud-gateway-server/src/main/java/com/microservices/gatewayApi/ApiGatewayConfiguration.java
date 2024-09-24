@@ -12,16 +12,14 @@ public class ApiGatewayConfiguration {
   public RouteLocator gatewayRouter(RouteLocatorBuilder routeLocatorBuilder) {
     return routeLocatorBuilder.routes()
         .route(p -> p
-            .path("/currency-exchange/**")
-            .uri("lb://CURRENCY-EXCHANGE-SERVICE"))
+            .path("/language-details/**")
+            .uri("lb://COUNTRY-LANGUAGES-SERVICE"))
         .route(p -> p
-            .path("/customer-details/**")
-            .uri("lb://CUSTOMER-EXCHANGE-SERVICE"))
+            .path("/country/**")
+            .uri("lb://COUNTRY-SERVICE"))
         .route(p -> p
-            .path("/currency-conversion-feign/**")
-            .uri("lb://currency-conversion-service"))
-        .route(p -> p.path("/currency-conversion/**")
-            .uri("lb://currency-conversion-service"))
+            .path("/city/**")
+            .uri("lb://COUNTRY-SERVICE"))
         .build();
   }
 }
