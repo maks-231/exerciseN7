@@ -1,6 +1,48 @@
 version: '3.3'
-
+#docker network create -d bridge backend
 services:
+  config-server:
+    image: localhost:5000/spring-cloud-config-server:1.0-SNAPSHOT
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    networks:
+      backend:
+        aliases:
+          - "config-server"
+
+  naming-server:
+    image: localhost:5000/spring-cloud-naming-server:1.0-SNAPSHOT
+    container_name: naming-server
+    environment:
+      - "SPRING_PROFILES_ACTIVE=cloud"
+    ports:
+      - "8761:8761"
+    depends_on:
+      config-server:
+        condition: service_started
+    networks:
+      backend:
+        aliases:
+          - "naming-serve"
+
+  gateway-server:
+    image: localhost:5000/spring-cloud-gateway-server:1.0-SNAPSHOT
+    container_name: gateway-server
+    environment:
+      - "SPRING_PROFILES_ACTIVE=cloud"
+    ports:
+      - "8765:8765"
+    depends_on:
+      config-server:
+        condition: service_started
+      naming-server:
+        condition: service_started
+    networks:
+      backend:
+        aliases:
+          - "gateway-server"
+
   world-database:
     image: postgres:16-alpine
     container_name: world-database
@@ -49,55 +91,49 @@ services:
         aliases:
           - "country-language-database-master"
 
-  config-server:
-    image: localhost:5000/spring-cloud-config-server:0.0.1-SNAPSHOT
-    ports:
-      - "8888:8888"
-    networks:
-      backend:
-        aliases:
-          - "config-server"
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.001'
-#          memory: 100M
-#        reservations:
-#          cpus: '0.0001'
-#          memory: 50M
-
-  naming-server:
-    image: localhost:5000/spring-cloud-naming-server:1.0-SNAPSHOT
+  country-languages-service-1:
+    image: localhost:5000/language-service:1.0-SNAPSHOT
+    container_name: country-languages-service-1
     environment:
-      - "SPRING_PROFILES_ACTIVE=cloud"
+      SERVER_PORT: 8001
+      SPRING_PROFILES_ACTIVE: "cloud"
     ports:
-      - "8761:8761"
-    depends_on:
-      config-server:
-        condition: service_started
+      - "8001:8001"
     networks:
-      backend:
-        aliases:
-          - "naming-serve"
+      - backend
 
-  gateway-server:
-    image: localhost:5000/spring-cloud-gateway-server:1.0-SNAPSHOT
+  country-languages-service-2:
+    image: localhost:5000/language-service:1.0-SNAPSHOT
+    container_name: country-languages-service-2
     environment:
-      - "SPRING_PROFILES_ACTIVE=cloud"
+      SERVER_PORT: 8002
+      SPRING_PROFILES_ACTIVE: "cloud"
     ports:
-      - "8765:8765"
-    depends_on:
-      config-server:
-        condition: service_started
-      naming-server:
-        condition: service_started
+      - "8002:8002"
     networks:
-      backend:
-        aliases:
-          - "gateway-server"
+      - backend
 
+  country-service-1:
+    image: localhost:5000/country-service:1.0-SNAPSHOT
+    container_name: country-service-1
+    environment:
+      SERVER_PORT: 8011
+      SPRING_PROFILES_ACTIVE: "cloud"
+    ports:
+      - "8011:8011"
+    networks:
+      - backend
 
-
+  country-service-2:
+    image: localhost:5000/country-service:1.0-SNAPSHOT
+    container_name: country-service-2
+    environment:
+      SERVER_PORT: 8012
+      SPRING_PROFILES_ACTIVE: "cloud"
+    ports:
+      - "8012:8012"
+    networks:
+      - backend
 
 networks:
   backend:
