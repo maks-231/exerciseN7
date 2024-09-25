@@ -20,7 +20,7 @@ public class CountryDto {
   private String localName;
   private String governmentForm;
   private String headOfState;
-  private String capital;
+  private Integer capital;
   private String code2;
 
   private String port;
@@ -155,11 +155,11 @@ public class CountryDto {
     this.headOfState = headOfState;
   }
 
-  public String getCapital() {
+  public Integer getCapital() {
     return capital;
   }
 
-  public void setCapital(String capital) {
+  public void setCapital(Integer capital) {
     this.capital = capital;
   }
 

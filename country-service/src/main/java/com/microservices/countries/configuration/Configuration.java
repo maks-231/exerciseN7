@@ -1,7 +1,6 @@
 package com.microservices.countries.configuration;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -14,8 +13,8 @@ public class Configuration {
     try {
       http
           .authorizeHttpRequests(authorize ->
-            authorize.requestMatchers(antMatcher("/country/**")).permitAll()
-                .requestMatchers(antMatcher(HttpMethod.GET, "/city/**")).permitAll()
+                                     authorize.requestMatchers(antMatcher("/country/**")).permitAll()
+                                         .requestMatchers(antMatcher("/city/**")).permitAll()
           );
 
       http.csrf().disable();

@@ -1,13 +1,7 @@
 package com.microservices.countries.entity;
 
-import com.microservices.countries.enums.Continent;
-
-import java.time.LocalDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,16 +9,16 @@ import jakarta.persistence.Id;
 @Entity(name = "country")
 public class CountryEntity {
   @Id
-  @GeneratedValue(strategy= GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name="name")
+  @Column(name = "name")
   private String name;
 
   @Column(name = "continent")
   private String continent;
 
-  @Column(name="region")
+  @Column(name = "region")
   private String region;
 
   @Column(name = "surfacearea")
@@ -45,19 +39,19 @@ public class CountryEntity {
   @Column(name = "gnpold")
   private Float gnpold;
 
-  @Column(name="localname")
+  @Column(name = "localname")
   private String localName;
 
-  @Column(name="governmentform")
+  @Column(name = "governmentform")
   private String governmentForm;
 
-  @Column(name="headofstate")
+  @Column(name = "headofstate")
   private String headOfState;
 
-  @Column(name="capital")
-  private String capital;
+  @Column(name = "capital")
+  private Integer capital;
 
-  @Column(name="code2")
+  @Column(name = "code2")
   private String code2;
 
   public Long getId() {
@@ -164,11 +158,11 @@ public class CountryEntity {
     this.headOfState = headOfState;
   }
 
-  public String getCapital() {
+  public Integer getCapital() {
     return capital;
   }
 
-  public void setCapital(String capital) {
+  public void setCapital(Integer capital) {
     this.capital = capital;
   }
 
