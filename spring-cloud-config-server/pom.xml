@@ -87,7 +87,7 @@
         <configuration>
           <image>
             <name>${repository.name}/${project.artifactId}:${project.version}</name>
-            <publish>true</publish>
+            <publish>${publish}</publish>
           </image>
           <pullPolicy>IF_NOT_PRESENT</pullPolicy>
           <docker>

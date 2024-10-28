@@ -184,6 +184,8 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring-boot-maven-plugin-version}</version>
+
         <executions>
           <execution>
             <goals>
@@ -194,7 +196,7 @@
         <configuration>
           <image>
             <name>${repository.name}/${project.artifactId}:${project.version}</name>
-            <publish>true</publish>
+            <publish>${publish}</publish>
           </image>
           <pullPolicy>IF_NOT_PRESENT</pullPolicy>
           <docker>
